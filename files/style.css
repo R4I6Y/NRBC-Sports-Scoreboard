@@ -1,0 +1,102 @@
+/* ==========================================================
+   OVERLAY CUSTOMIZATION: every position is in px, measured from
+   the top-left corner of the scorebug box (#bug). Edit freely.
+   ========================================================== */
+:root {
+  /* Scorebug box on the 1920x1080 canvas */
+  --bug-x: 510px;  --bug-y: 900px;  --bug-w: 900px;  --bug-h: 110px;
+
+  /* Backgrounds. For your own Affinity PNG: --bug-img: url("assets/scorebug.png");
+     and set --bug-bg: none; to hide the default plate. */
+  --bug-img: none;
+  --bug-bg: linear-gradient(#1b1f27, #0c0e13);
+  --spot-bg: linear-gradient(#1b1f27, #0c0e13);
+
+  /* Fonts and colors */
+  --font: 'Oswald', 'Arial Narrow', Impact, sans-serif;
+  --text: #ffffff;  --muted: #a8b0bf;  --accent: #ffc72c;  --alert: #ff5a4f;
+  --away-color: #c8102e;  --home-color: #1d428a;   /* set live from the controller */
+
+  /* Team names */
+  --name-size: 38px;  --name-y: 30px;  --name-w: 150px;
+  --away-name-x: 24px;  --home-name-x: 726px;
+
+  /* Scores */
+  --score-size: 66px;  --score-y: 12px;  --score-w: 110px;
+  --away-score-x: 176px;  --home-score-x: 614px;
+
+  /* Center block: period + game clock */
+  --center-x: 300px;  --center-w: 300px;
+  --period-size: 24px;  --period-y: 6px;
+  --clock-size: 60px;  --clock-y: 30px;
+
+  /* Shot clock (hangs below the bug) */
+  --shot-x: 375px;  --shot-y: 118px;  --shot-w: 150px;  --shot-size: 40px;
+
+  /* Fouls + timeout dots */
+  --meta-size: 16px;  --meta-y: 80px;
+  --away-meta-x: 24px;  --home-meta-x: 726px;
+
+  /* Player spotlight card (to the left of the bug) */
+  --spot-x: -410px;  --spot-y: 0px;  --spot-w: 390px;  --spot-h: 110px;
+}
+
+/* ---------------- Overlay ---------------- */
+body.overlay { margin: 0; overflow: hidden; background: rgba(0,0,0,0); font-family: var(--font); color: var(--text); }
+body.overlay.preview { background: #2f6b3a; }  /* add ?preview to the URL to see it on a color */
+#stage { position: relative; width: 1920px; height: 1080px; }
+#bug { position: absolute; left: var(--bug-x); top: var(--bug-y); width: var(--bug-w); height: var(--bug-h);
+  background-image: var(--bug-img), var(--bug-bg); background-size: 100% 100%; border-radius: 10px; }
+.el { position: absolute; text-align: center; line-height: 1; white-space: nowrap; }
+.name, #spotName, #period { text-transform: uppercase; }
+.name { top: var(--name-y); width: var(--name-w); font-size: var(--name-size); font-weight: 700; }
+#awayName { left: var(--away-name-x); }   #homeName { left: var(--home-name-x); }
+.score { top: var(--score-y); width: var(--score-w); font-size: var(--score-size); font-weight: 700; font-variant-numeric: tabular-nums; }
+#awayScore { left: var(--away-score-x); } #homeScore { left: var(--home-score-x); }
+#period { left: var(--center-x); top: var(--period-y); width: var(--center-w); font-size: var(--period-size); color: var(--accent); letter-spacing: 2px; }
+#clock { left: var(--center-x); top: var(--clock-y); width: var(--center-w); font-size: var(--clock-size); font-weight: 700; font-variant-numeric: tabular-nums; }
+#clock.low, #shot.low { color: var(--alert); }
+#shot { left: var(--shot-x); top: var(--shot-y); width: var(--shot-w); font-size: var(--shot-size); font-weight: 700;
+  padding: 6px 0; background: #0c0e13; color: var(--accent); border-radius: 6px; font-variant-numeric: tabular-nums; }
+.bar { top: 0; width: 300px; height: 6px; }
+#awayBar { left: 0; background: var(--away-color); border-radius: 10px 0 0 0; }
+#homeBar { left: 600px; background: var(--home-color); border-radius: 0 10px 0 0; }
+.meta { top: var(--meta-y); width: var(--name-w); font-size: var(--meta-size); display: flex; gap: 10px; align-items: center; justify-content: center; color: var(--muted); }
+#awayMeta { left: var(--away-meta-x); } #homeMeta { left: var(--home-meta-x); }
+.meta .bonus { color: var(--alert); }
+.dots i { display: inline-block; width: 10px; height: 10px; margin: 0 2px; border-radius: 50%; background: rgba(255,255,255,.2); }
+.dots i.on { background: var(--accent); }
+.pop { animation: pop .45s ease-out; }
+@keyframes pop { 0% { transform: scale(1.3); color: var(--accent); } 100% { transform: scale(1); } }
+
+#spot { left: var(--spot-x); top: var(--spot-y); width: var(--spot-w); height: var(--spot-h); box-sizing: border-box; padding: 0 18px;
+  display: flex; align-items: center; gap: 14px; text-align: left; background: var(--spot-bg); border-radius: 10px;
+  opacity: 0; transform: translateX(-90px); transition: transform .5s cubic-bezier(.2,.8,.2,1), opacity .35s; }
+#spot.show { opacity: 1; transform: none; }
+#spotNum { font-size: 58px; font-weight: 700; color: var(--accent); min-width: 70px; text-align: center; }
+#spotName { font-size: 30px; font-weight: 700; }
+#spotStat { font-size: 20px; color: var(--muted); margin-top: 6px; }
+
+/* ---------------- Controller ---------------- */
+body.ctl { margin: 0; padding: max(12px, env(safe-area-inset-top)) 12px 48px; background: #12151b; color: #e8ebf0;
+  font: 16px/1.35 'Segoe UI', system-ui, sans-serif; }
+.ctl h1 { margin: 0 0 12px; font-size: 22px; max-width: 1100px; margin-inline: auto; }
+.ctl h2 { margin: 0 0 10px; font-size: 15px; font-weight: 600; color: var(--accent); }
+.ctl .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; max-width: 1100px; margin: 0 auto; }
+.card { background: #1b2029; border-radius: 14px; padding: 14px; }
+.ctl button { min-height: 48px; padding: 0 14px; font: 600 17px inherit; font-family: inherit; color: inherit; background: #2d3542;
+  border: 0; border-radius: 10px; cursor: pointer; touch-action: manipulation; }
+.ctl button:active { transform: scale(.96); }
+.ctl button.on, .ctl button.run { background: #1f8a4c; }
+.ctl button.stop { background: #b3392f; }
+.ctl input { min-height: 44px; width: 100%; box-sizing: border-box; padding: 0 10px; font: inherit; color: inherit; background: #12151b; border: 1px solid #39414f; border-radius: 8px; }
+.ctl input[type=color] { padding: 2px; min-width: 52px; }
+.ctl input[type=checkbox] { width: 22px; min-height: 22px; }
+.row { display: flex; gap: 8px; margin-top: 8px; } .row > * { flex: 1; min-width: 0; }
+.big { font-size: 68px; font-weight: 800; text-align: center; line-height: 1.05; }
+.clk { font-size: 52px; font-weight: 800; text-align: center; font-variant-numeric: tabular-nums; }
+.counter { display: flex; align-items: center; gap: 8px; margin-top: 8px; } .counter span { flex: 1; } .counter b { min-width: 30px; text-align: center; font-size: 22px; }
+.counter button { width: 54px; flex: none; }
+.small { color: #9aa3b2; font-size: 14px; } .wide { grid-column: 1 / -1; }
+#status { font-weight: 600; } .link { display: flex; gap: 8px; margin-top: 8px; }
+kbd { background: #2d3542; border-radius: 4px; padding: 1px 6px; font-size: 13px; }

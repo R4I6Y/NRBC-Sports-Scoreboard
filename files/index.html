@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Scoreboard Controller</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+</head>
+<body class="ctl" data-role="controller">
+<h1>Scoreboard controller</h1>
+<div class="grid">
+
+  <section class="card wide">
+    <h2>Connection</h2>
+    <div class="row">
+      <input id="room" inputmode="numeric" maxlength="4" placeholder="4-digit room code">
+      <button data-a="connect">Connect</button>
+      <button data-a="newRoom">New code</button>
+    </div>
+    <p id="status" class="small">Starting…</p>
+    <div class="link"><input id="overlayLink" readonly><button data-a="copy">Copy</button></div>
+    <p class="small">Paste that link into the OBS Browser Source (1920×1080). Keep this page open while you broadcast.</p>
+  </section>
+
+  <div id="teams" class="grid wide" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))"></div>
+
+  <section class="card">
+    <h2>Game clock</h2>
+    <div class="clk" id="gameClock">12:00</div>
+    <div class="row"><button id="gameBtn" data-a="gameToggle">Start</button></div>
+    <div class="row"><button data-a="gameAdj" data-v="-1000">−1s</button><button data-a="gameAdj" data-v="1000">+1s</button></div>
+    <div class="row"><input id="timeIn" placeholder="12:00 or 45.5"><button data-a="gameSet">Set time</button></div>
+    <label class="counter"><input id="link" type="checkbox" checked><span>Shot clock follows game clock</span></label>
+  </section>
+
+  <section class="card">
+    <h2>Shot clock</h2>
+    <div class="clk" id="shotClock">24</div>
+    <div class="row"><button id="shotBtn" data-a="shotToggle">Start</button></div>
+    <div class="row"><button data-a="shotReset" data-v="24">Reset 24</button><button data-a="shotReset" data-v="14">Reset 14</button></div>
+  </section>
+
+  <section class="card">
+    <h2>Period</h2>
+    <div class="row">
+      <button data-a="period" data-v="1ST">1</button><button data-a="period" data-v="2ND">2</button>
+      <button data-a="period" data-v="3RD">3</button><button data-a="period" data-v="4TH">4</button>
+      <button data-a="period" data-v="OT">OT</button>
+    </div>
+    <div class="row"><button data-a="resetFouls">Reset team fouls</button></div>
+  </section>
+
+  <section class="card">
+    <h2>Player spotlight</h2>
+    <div class="row"><input data-in="spot.name" placeholder="Player name"><input data-in="spot.num" placeholder="#" maxlength="3" style="max-width:70px"></div>
+    <div class="row"><input data-in="spot.stat" placeholder="3-PT: 80% (4/5)"></div>
+    <div class="row"><button id="spotBtn" data-a="spot">Show card</button></div>
+  </section>
+
+  <section class="card wide">
+    <h2>Keyboard shortcuts</h2>
+    <p class="small"><kbd>Space</kbd> start/stop clock · <kbd>R</kbd> shot 24 · <kbd>T</kbd> shot 14 · <kbd>,</kbd> <kbd>.</kbd> clock −1s/+1s · <kbd>1</kbd>–<kbd>4</kbd> / <kbd>0</kbd> period (0 = OT) · <kbd>P</kbd> spotlight<br>
+    Away: <kbd>A</kbd> +1 <kbd>S</kbd> +2 <kbd>D</kbd> +3 <kbd>Z</kbd> −1 · Home: <kbd>J</kbd> +1 <kbd>K</kbd> +2 <kbd>L</kbd> +3 <kbd>M</kbd> −1</p>
+  </section>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
